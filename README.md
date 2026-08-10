@@ -1,6 +1,6 @@
-# 🚀 Antigravity AI SaaS Platform
+# 🚀 AI Based React Project
 
-A modern, enterprise-grade AI SaaS dashboard built with React, TypeScript, and Tailwind CSS. Features authentication, AI chat capabilities, and a beautiful dark-themed dashboard.
+A modern, enterprise-grade AI SaaS dashboard built with React, TypeScript, and Tailwind CSS. Features authentication and a beautiful dark-themed dashboard.
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -10,30 +10,29 @@ A modern, enterprise-grade AI SaaS dashboard built with React, TypeScript, and T
 
 - 🔐 **Authentication** - Secure login with JWT token support
 - 📊 **Dashboard** - Real-time metrics and activity monitoring
-- 🤖 **AI Chat** - Interactive AI conversation interface
 - 🎨 **Modern UI** - Dark theme with smooth animations
 - 📱 **Responsive** - Mobile-first design
 - ⚡ **Performance** - Optimized with Vite build tool
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| React 19 | UI Framework |
-| TypeScript | Type Safety |
-| Tailwind CSS 4 | Styling |
-| Redux Toolkit | State Management |
-| React Router 7 | Routing |
-| React Hook Form | Form Handling |
-| Zod | Schema Validation |
-| Axios | HTTP Client |
-| Lucide Icons | Icon System |
+| Technology      | Purpose           |
+| --------------- | ----------------- |
+| React 19        | UI Framework      |
+| TypeScript      | Type Safety       |
+| Tailwind CSS 4  | Styling           |
+| Redux Toolkit   | State Management  |
+| React Router 7  | Routing           |
+| React Hook Form | Form Handling     |
+| Zod             | Schema Validation |
+| Axios           | HTTP Client       |
+| Lucide Icons    | Icon System       |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
@@ -61,20 +60,20 @@ The app will open at [http://localhost:5173](http://localhost:5173)
 
 For testing the demo authentication:
 
-| Field | Value |
-|-------|-------|
-| Email | `admin@mailinator.com` |
-| Password | `123456` |
+| Field    | Value                  |
+| -------- | ---------------------- |
+| Email    | `admin@mailinator.com` |
+| Password | `123456`               |
 
 > ⚠️ **Note**: This is a demo project with static credentials. For production, integrate with a real authentication backend.
 
 ## 📜 Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
+| Command              | Description                  |
+| -------------------- | ---------------------------- |
+| `npm run dev`        | Start development server     |
+| `npm run build`      | Build for production         |
+| `npm run preview`    | Preview production build     |
 | `npm run type-check` | Run TypeScript type checking |
 
 ## 📁 Project Structure
