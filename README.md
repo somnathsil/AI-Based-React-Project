@@ -1,6 +1,6 @@
-# 🚀 AI Based React Project
+# 🚀 PixelCoders AI Platform
 
-A modern, enterprise-grade AI SaaS dashboard built with React, TypeScript, and Tailwind CSS. Features authentication and a beautiful dark-themed dashboard.
+A modern, enterprise-grade AI SaaS dashboard built with React, TypeScript, and Tailwind CSS. Features authentication and a beautiful dark-themed dashboard with custom PixelCoders branding.
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -96,7 +96,40 @@ src/
 ├── store/             # Redux store
 ├── styles/            # Global styles
 └── types/             # TypeScript types
+
+public/
+├── favicon.svg        # Main favicon (SVG format)
+├── favicon.png        # PNG fallback (convert from SVG)
+├── favicon.ico        # ICO fallback (convert from SVG)
+└── favicon-preview.html # Preview page for testing
 ```
+
+## 🎨 Favicon & Branding
+
+The project includes a custom **"px"** favicon for PixelCoders:
+
+### Files
+- `public/favicon.svg` - Main SVG favicon (scalable, modern browsers)
+- `public/favicon.png` - PNG fallback (convert SVG to PNG)
+- `public/favicon.ico` - ICO fallback (maximum compatibility)
+- `public/favicon-preview.html` - Preview page to test the favicon
+
+### Converting Favicon
+For better compatibility, convert the SVG to other formats:
+
+1. **Online Tools:**
+   - [Convertio](https://convertio.co/svg-png/)
+   - [CloudConvert](https://cloudconvert.com/svg-to-png)
+   - [Favicon Generator](https://www.favicon.cc/)
+
+2. **Recommended Sizes:**
+   - 16x16 pixels (favicon.ico)
+   - 32x32 pixels (standard)
+   - 48x48 pixels (Windows)
+   - 64x64 pixels (high DPI)
+
+### Preview
+Open `public/favicon-preview.html` in your browser to see how the favicon looks.
 
 ## 🔧 Environment Variables
 
@@ -104,7 +137,7 @@ Create a `.env` file based on `.env.example`:
 
 ```env
 VITE_API_BASE_URL=https://api.aisaas.example.com/v1
-VITE_APP_TITLE=Antigravity AI SaaS Platform
+VITE_APP_TITLE=PixelCoders AI Platform
 VITE_ENABLE_ANALYTICS=false
 ```
 

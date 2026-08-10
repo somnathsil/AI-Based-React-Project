@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Preview - PixelCoders</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #38bdf8, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .preview-section {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        
+        .favicon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .favicon-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .favicon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+        }
+        
+        .favicon-card img {
+            width: 100%;
+            height: auto;
+            max-width: 80px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        
+        .favicon-card h3 {
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .favicon-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .color-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .color-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        
+        .color-dot.blue {
+            background: #38bdf8;
+        }
+        
+        .color-dot.gradient {
+            background: linear-gradient(135deg, #38bdf8, #8b5cf6, #ec4899);
+        }
+        
+        .instructions {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: left;
+            border: 1px solid rgba(56, 189, 248, 0.1);
+        }
+        
+        .instructions h2 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .instructions ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .instructions li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #cbd5e1;
+        }
+        
+        .instructions li:before {
+            content: "•";
+            color: #38bdf8;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        .tab-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+        }
+        
+        .tab-favicon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .tab-text {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        
+        .mockup-browser {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 30px;
+            border: 1px solid #334155;
+        }
+        
+        .browser-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .browser-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #0f172a;
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        
+        .browser-tab.active {
+            background: #334155;
+            color: white;
+        }
+        
+        .browser-tab img {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .browser-content {
+            background: #0f172a;
+            height: 100px;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PixelCoders Favicon Preview</h1>
+        
+        <div class="preview-section">
+            <h2 style="color: #38bdf8; margin-bottom: 20px;">Browser Tab Preview</h2>
+            
+            <div class="mockup-browser">
+                <div class="browser-tabs">
+                    <div class="browser-tab active">
+                        <img src="/favicon.svg" alt="Favicon">
+                        <span>PixelCoders - AI Platform</span>
+                    </div>
+                    <div class="browser-tab">
+                        <span>Another Tab</span>
+                    </div>
+                </div>
+                <div class="browser-content">
+                    Browser content area
+                </div>
+            </div>
+        </div>
+        
+        <div class="favicon-grid">
+            <div class="favicon-card">
+                <img src="/favicon.svg" alt="SVG Favicon">
+                <h3>Current Design</h3>
+                <p>Uppercase "PC" for PixelCoders</p>
+            </div>
+            
+            <div class="favicon-card">
+                <div style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <span style="font-size: 48px; font-weight: bold; font-family: Arial, sans-serif;">
+                        <span style="color: #38bdf8;">P</span><span style="color: #8b5cf6;">C</span>
+                    </span>
+                </div>
+                <h3>Color Breakdown</h3>
+                <p>"P" in blue, "C" in gradient</p>
+            </div>
+            
+            <div class="favicon-card">
+                <div style="width: 80px; height: 80px; background: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <span style="font-size: 48px; font-weight: bold; font-family: Arial, sans-serif;">
+                        <span style="color: #0284c7;">P</span><span style="color: #8b5cf6;">C</span>
+                    </span>
+                </div>
+                <h3>Light Mode Version</h3>
+                <p>For light backgrounds</p>
+            </div>
+        </div>
+        
+        <div class="color-legend">
+            <div class="color-item">
+                <div class="color-dot blue"></div>
+                <span>"P" - Blue (#38bdf8)</span>
+            </div>
+            <div class="color-item">
+                <div class="color-dot gradient"></div>
+                <span>"C" - Gradient (#38bdf8 → #8b5cf6 → #ec4899)</span>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>Design Details</h2>
+            <ul>
+                <li><strong>Minimalist Design</strong> - Pure text without background or borders</li>
+                <li><strong>"P" Color</strong> - Blue (#38bdf8) - matches your brand color</li>
+                <li><strong>"C" Color</strong> - Gradient from cyan to purple to pink (matching "Coders")</li>
+                <li><strong>Represents</strong> - PC for PixelCoders (uppercase)</li>
+                <li><strong>Scalable</strong> - SVG format works at any size</li>
+                <li><strong>Modern</strong> - Clean, professional appearance</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
