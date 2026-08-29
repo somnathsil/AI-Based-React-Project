@@ -102,3 +102,13 @@ src/
 | `/demo`      | Public                       | Interactive demo preview |
 | `/login`     | Public (redirects if authed) | Email/password login     |
 | `/dashboard` | Protected                    | Icon generator workspace |
+
+## Environment Setup
+
+After cloning the project, create a `.env` file in the project root.
+
+You can use `.env.example` as a template:
+
+```bash
+cp .env.example .env
+```
