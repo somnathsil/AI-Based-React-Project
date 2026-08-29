@@ -1,0 +1,111 @@
+.how-it-works {
+  &__heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #f1f5f9;
+    text-align: center;
+    margin: 0 0 48px;
+    letter-spacing: -0.5px;
+
+    @media (max-width: 767.98px) {
+      font-size: 22px;
+    }
+  }
+
+  &__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+
+    @media (max-width: 767.98px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+}
+
+.how-step {
+  text-align: center;
+  padding: 32px 24px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid rgba(51, 65, 85, 0.2);
+  transition: all 0.3s ease;
+  animation: how-step-enter 0.6s ease both;
+
+  &--featured {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: rgba(99, 102, 241, 0.2);
+    transform: scale(1.02);
+
+    .how-step__icon {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+      color: #a78bfa;
+      box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .how-step__number {
+      color: #818cf8;
+    }
+
+    @media (max-width: 767.98px) {
+      transform: none;
+    }
+  }
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(51, 65, 85, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: #64748b;
+    transition: all 0.3s ease;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__number {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0 0 8px;
+  }
+
+  &__description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin: 0;
+  }
+}
+
+@keyframes how-step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

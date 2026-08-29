@@ -1,0 +1,72 @@
+.svg-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(51, 65, 85, 0.3);
+  animation: svg-preview-enter 0.4s ease;
+
+  &--sm {
+    width: 64px;
+    height: 64px;
+
+    .svg-preview__canvas {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  &--md {
+    width: 120px;
+    height: 120px;
+
+    .svg-preview__canvas {
+      width: 56px;
+      height: 56px;
+    }
+  }
+
+  &--lg {
+    width: 200px;
+    height: 200px;
+
+    .svg-preview__canvas {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  &--xl {
+    width: 280px;
+    height: 280px;
+
+    .svg-preview__canvas {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  &__canvas {
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+@keyframes svg-preview-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
