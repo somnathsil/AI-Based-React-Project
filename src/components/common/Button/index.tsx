@@ -26,7 +26,7 @@ export function Button({
       {...props}
     >
       {loading && <span className="btn__spinner" aria-hidden="true" />}
-      <span className={loading ? 'btn__loading-text' : ''}>{children}</span>
+      {loading ? <span className="btn__loading-text">{children}</span> : children}
     </button>
   )
 }
