@@ -14,8 +14,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const [activeTab, setActiveTab] = useState<"generator" | "history">(
-    "generator",
+  const [activeTab, setActiveTab] = useState<"search" | "history">(
+    "search",
   );
   const { toasts, dismiss } = useToasts();
 
@@ -36,8 +36,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
             <nav className="dashboard-header__nav">
               <button
-                className={`dashboard-header__nav-btn ${activeTab === "generator" ? "dashboard-header__nav-btn--active" : ""}`}
-                onClick={() => setActiveTab("generator")}
+                className={`dashboard-header__nav-btn ${activeTab === "search" ? "dashboard-header__nav-btn--active" : ""}`}
+                onClick={() => setActiveTab("search")}
               >
                 <svg
                   width="16"
@@ -49,9 +49,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                Generator
+                Search
               </button>
               {/* <button
                 className={`dashboard-header__nav-btn ${activeTab === 'history' ? 'dashboard-header__nav-btn--active' : ''}`}
