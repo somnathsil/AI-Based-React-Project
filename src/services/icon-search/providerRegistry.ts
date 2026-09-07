@@ -2,6 +2,7 @@ import type { IconSearchProvider, IconSource } from './types'
 import { iconifyProvider } from './providers/iconify'
 import { lucideProvider } from './providers/lucide'
 import { magnificProvider } from './providers/magnific'
+import { remixiconProvider } from './providers/remixicon'
 
 /**
  * Central provider registry.
@@ -20,6 +21,7 @@ import { magnificProvider } from './providers/magnific'
 const providerList: IconSearchProvider[] = [
   iconifyProvider,
   lucideProvider,
+  remixiconProvider,
   magnificProvider,
 ]
 

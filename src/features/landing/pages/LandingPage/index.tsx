@@ -24,23 +24,23 @@ export function LandingPage() {
         {/* Hero */}
         <section className="landing__hero">
           <div className="landing__hero-badge">
-            ✨ AI-Powered SVG Icon Generator
+            ✨ AI-Powered SVG Icon Search
           </div>
 
           <h1 className="landing__hero-title">
-            <span className="landing__hero-title-gradient">Describe It.</span>{" "}
-            AI Creates It.
+            <span className="landing__hero-title-gradient">Search It.</span>{" "}
+            Find It.
           </h1>
 
           <p className="landing__hero-description">
-            Generate clean, scalable SVG icons from natural language using AI.
-            Describe anything, choose Fill or Stroke, and get a ready-to-use SVG
-            in seconds.
+            Search thousands of SVG icons across top libraries like Iconify, Lucide,
+            and Remix Icon. AI understands your query and finds the best matches
+            from multiple sources in seconds.
           </p>
 
           <div className="landing__hero-cta">
             <Button size="lg" onClick={handleCta}>
-              Generate Your Icon →
+              Search Icons →
             </Button>
           </div>
         </section>

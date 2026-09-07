@@ -6,6 +6,7 @@ export type IconSource =
   | 'iconify'
   | 'magnific'
   | 'lucide'
+  | 'remixicon'
 
 /**
  * Options passed to a provider's search method.

@@ -9,7 +9,7 @@ export function Footer() {
           <span className="landing-footer__coders">Coders</span>
         </div>
         <p className="landing-footer__copy">
-          Describe It. AI Creates It.
+          Search It. Find It.
         </p>
       </div>
     </footer>

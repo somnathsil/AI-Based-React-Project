@@ -104,9 +104,8 @@ export function GeneratorPage() {
           onComplete: (finalResults, failed) => {
             dispatch(setResults(finalResults))
             if (failed.length > 0) {
-              const failedNames = failed.join(', ')
               showToast(
-                `Some icon sources are temporarily unavailable. Showing results from available sources.`,
+                `${failed.join(' & ')} temporarily unavailable. Showing results from other sources.`,
                 'info',
               )
             } else if (finalResults.length === 0) {
@@ -244,7 +243,12 @@ export function GeneratorPage() {
                     <line x1="12" y1="8" x2="12" y2="12" />
                     <line x1="12" y1="16" x2="12.01" y2="16" />
                   </svg>
-                  <span>Some icon sources are temporarily unavailable. Showing results from available sources.</span>
+                  <span>
+                    {failedProviders.length === 1
+                      ? `${failedProviders[0]} is temporarily unavailable.`
+                      : `${failedProviders.join(', ')} are temporarily unavailable.`}
+                    {' '}Showing results from available sources.
+                  </span>
                 </div>
               )}
             </div>

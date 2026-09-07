@@ -13,11 +13,11 @@ export function DemoPage() {
           <div className="demo-page__badge">✨ Interactive Demo</div>
 
           <h1 className="demo-page__title">
-            Try the <span className="demo-page__title-gradient">AI SVG Generator</span>
+            Try the <span className="demo-page__title-gradient">AI Icon Search</span>
           </h1>
 
           <p className="demo-page__description">
-            Describe any icon and see how our AI brings it to life.
+            Search for any icon and see how AI finds the best matches.
           </p>
 
           <HeroPreview />

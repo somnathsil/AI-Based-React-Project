@@ -17,15 +17,28 @@ interface IconifyIconData {
   height?: number
 }
 
+interface IconifyBundleAlias {
+  parent: string
+  // aliases can also carry overrides, but we only need parent for resolution
+  [key: string]: unknown
+}
+
 interface IconifyBundleResponse {
-  [prefix: string]: {
-    [iconName: string]: IconifyIconData
-  }
+  prefix: string
+  icons: Record<string, IconifyIconData>
+  aliases?: Record<string, IconifyBundleAlias>
+  width?: number
+  height?: number
+  lastModified?: number
 }
 
 const ICONIFY_SEARCH_URL = 'https://api.iconify.design/search'
 const ICONIFY_BUNDLE_URL = 'https://api.iconify.design'
-const DEFAULT_LIMIT = 30
+/**
+ * Iconify /search endpoint enforces a minimum limit of 32.
+ * We use 64 as default to stay safely above that.
+ */
+const DEFAULT_LIMIT = 64
 const REQUEST_TIMEOUT = 10000
 
 /**
@@ -124,13 +137,20 @@ export const iconifyProvider: IconSearchProvider = {
     // Step 1: Search for icon identifiers
     // Request extra icons to allow spreading across prefixes
     const searchUrl = buildSearchUrl(query, limit + 30)
-    const searchResponse = await fetchWithTimeout(searchUrl, timeoutMs)
+    let searchData: IconifySearchResponse
+    try {
+      const searchResponse = await fetchWithTimeout(searchUrl, timeoutMs)
 
-    if (!searchResponse.ok) {
-      throw new Error(`Iconify search failed: ${searchResponse.status}`)
+      if (!searchResponse.ok) {
+        console.warn(`[Iconify] Search API returned HTTP ${searchResponse.status} for query "${query}"`)
+        return []
+      }
+
+      searchData = await searchResponse.json()
+    } catch (err) {
+      console.warn(`[Iconify] Search request failed for query "${query}":`, err)
+      return []
     }
-
-    const searchData: IconifySearchResponse = await searchResponse.json()
 
     if (!searchData.icons || searchData.icons.length === 0) {
       return []
@@ -150,12 +170,15 @@ export const iconifyProvider: IconSearchProvider = {
     }
 
     // Also search with Font Awesome prefixes directly to get more FA results
+    // Note: Iconify /search endpoint has a minimum limit of 32
     const faSearchPromises = FA_PREFIXES.map(async (faPrefix) => {
       try {
-        const faUrl = buildSearchUrl(query, 10)
-        const faParams = new URLSearchParams({ query, limit: '10', prefix: faPrefix })
+        const faParams = new URLSearchParams({ query, limit: '32', prefix: faPrefix })
         const faResp = await fetchWithTimeout(`${ICONIFY_SEARCH_URL}?${faParams.toString()}`, timeoutMs)
-        if (!faResp.ok) return
+        if (!faResp.ok) {
+          console.warn(`[Iconify] FA prefix search failed for ${faPrefix}: HTTP ${faResp.status}`)
+          return
+        }
         const faData: IconifySearchResponse = await faResp.json()
         if (faData.icons) {
           for (const icon of faData.icons) {
@@ -166,8 +189,8 @@ export const iconifyProvider: IconSearchProvider = {
             byPrefix.get(prefix)!.push(icon)
           }
         }
-      } catch {
-        // FA prefix search failed, continue with main results
+      } catch (err) {
+        console.warn(`[Iconify] FA prefix search failed for ${faPrefix}:`, err)
       }
     })
     await Promise.allSettled(faSearchPromises)
@@ -217,18 +240,32 @@ export const iconifyProvider: IconSearchProvider = {
       fetchPromises.push(
         fetchWithTimeout(bundleUrl, timeoutMs)
           .then(async (resp) => {
-            if (!resp.ok) return
+            if (!resp.ok) {
+              console.warn(`[Iconify] Bundle fetch failed for prefix ${prefix}: HTTP ${resp.status}`)
+              return
+            }
             const bundle: IconifyBundleResponse = await resp.json()
-            const prefixData = bundle[prefix]
-            if (!prefixData) return
+            const icons = bundle.icons
+            if (!icons || typeof icons !== 'object') {
+              console.warn(`[Iconify] No icons data for prefix ${prefix} in bundle response`)
+              return
+            }
+
+            // Build an alias lookup: aliases map short names to parent icon names
+            const aliasMap = bundle.aliases ?? {}
 
             for (const name of names) {
-              const iconData = prefixData[name]
+              // Direct lookup first, then resolve aliases
+              let iconData = icons[name]
+              if (!iconData && aliasMap[name]) {
+                const parentName = aliasMap[name].parent
+                iconData = icons[parentName]
+              }
               if (!iconData || !iconData.body) continue
 
               const svgBody = iconData.body
-              const w = iconData.width ?? 24
-              const h = iconData.height ?? 24
+              const w = iconData.width ?? bundle.width ?? 24
+              const h = iconData.height ?? bundle.height ?? 24
               const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}">${svgBody}</svg>`
 
               results.push({
@@ -248,8 +285,8 @@ export const iconifyProvider: IconSearchProvider = {
               })
             }
           })
-          .catch(() => {
-            // Silently fail for individual prefix fetches
+          .catch((err) => {
+            console.warn(`[Iconify] Bundle fetch error for prefix ${prefix}:`, err)
           }),
       )
     }

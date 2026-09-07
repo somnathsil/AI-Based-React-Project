@@ -181,6 +181,7 @@ export async function executeSearch(
   // Search each provider with ALL search terms, cap per provider
   const providerSearchPromises = searchProviders.map(async (provider) => {
     const providerResults: IconSearchResult[] = []
+    let consecutiveErrors = 0
 
     for (const term of understanding.searchTerms) {
       try {
@@ -190,14 +191,25 @@ export async function executeSearch(
           timeoutMs: options?.timeoutMs ?? 8000,
         })
         providerResults.push(...results)
+        consecutiveErrors = 0 // Reset on success
 
         // Stop early if this provider already has enough candidates
         if (providerResults.length >= PER_PROVIDER_CAP + 5) break
       } catch (error: unknown) {
+        consecutiveErrors++
         console.warn(
-          `[${provider.meta.name}] Search failed for "${term}":`,
+          `[${provider.meta.name}] Search failed for "${term}" (${consecutiveErrors} consecutive errors):`,
           error,
         )
+
+        // If a provider fails on the first term, don't waste time retrying
+        // with other terms — it's likely a network/API issue
+        if (consecutiveErrors >= 2) {
+          console.warn(
+            `[${provider.meta.name}] Skipping remaining search terms due to repeated failures`,
+          )
+          break
+        }
       }
     }
 
@@ -250,7 +262,8 @@ export async function executeSearch(
 
   // Step 3: Interleave and deduplicate across providers
   callbacks.onStatusChange('ranking')
-  const interleaved = buildInterleavedResults(resultsByProvider)
+  const interleavedRaw = buildInterleavedResults(resultsByProvider)
+  const interleaved = deduplicateResults(interleavedRaw)
 
   // Step 4: Score and rank the interleaved results
   const scored = scoreRelevance(interleaved, understanding)
