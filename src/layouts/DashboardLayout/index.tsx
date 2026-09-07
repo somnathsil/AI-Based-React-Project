@@ -14,9 +14,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const [activeTab, setActiveTab] = useState<"search" | "history">(
-    "search",
-  );
+  const [activeTab, setActiveTab] = useState<"search" | "history">("search");
   const { toasts, dismiss } = useToasts();
 
   const handleLogout = () => {
@@ -34,7 +32,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="dashboard-header__coders">Coders</span>
             </Link>
 
-            <nav className="dashboard-header__nav">
+            {/* <nav className="dashboard-header__nav">
               <button
                 className={`dashboard-header__nav-btn ${activeTab === "search" ? "dashboard-header__nav-btn--active" : ""}`}
                 onClick={() => setActiveTab("search")}
@@ -54,7 +52,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </svg>
                 Search
               </button>
-              {/* <button
+              <button
                 className={`dashboard-header__nav-btn ${activeTab === 'history' ? 'dashboard-header__nav-btn--active' : ''}`}
                 onClick={() => setActiveTab('history')}
               >
@@ -63,8 +61,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
                 History
-              </button> */}
-            </nav>
+              </button>
+            </nav> */}
           </div>
 
           <div className="dashboard-header__right">
