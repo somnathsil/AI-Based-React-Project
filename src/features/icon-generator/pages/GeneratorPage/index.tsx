@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo } from 'react'
-import { useAppDispatch } from '@/hooks/useAppDispatch'
-import { useAppSelector } from '@/hooks/useAppSelector'
+import { useState, useCallback, useMemo } from "react";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useAppSelector } from "@/hooks/useAppSelector";
 import {
   setQuery,
   setIconStyle,
@@ -16,28 +16,28 @@ import {
   setError,
   clearSearch,
   addToSearchHistory,
-} from '@/store/searchSlice'
-import { executeSearch } from '@/services/icon-search/searchService'
-import type { IconSearchResult } from '@/services/icon-search/types'
-import type { IconSource } from '@/services/icon-search/types'
-import { SearchPanel } from '@/features/icon-generator/components/SearchPanel'
-import { SourceFilter } from '@/features/icon-generator/components/SourceFilter'
-import { SearchResultsGrid } from '@/features/icon-generator/components/SearchResultsGrid'
-import { IconDetail } from '@/features/icon-generator/components/IconDetail'
-import { showToast } from '@/components/common/Toast'
-import './styles.scss'
+} from "@/store/searchSlice";
+import { executeSearch } from "@/services/icon-search/searchService";
+import type { IconSearchResult } from "@/services/icon-search/types";
+import type { IconSource } from "@/services/icon-search/types";
+import { SearchPanel } from "@/features/icon-generator/components/SearchPanel";
+import { SourceFilter } from "@/features/icon-generator/components/SourceFilter";
+import { SearchResultsGrid } from "@/features/icon-generator/components/SearchResultsGrid";
+import { IconDetail } from "@/features/icon-generator/components/IconDetail";
+import { showToast } from "@/components/common/Toast";
+import "./styles.scss";
 
 const STATUS_MESSAGES: Record<string, string> = {
-  understanding: '🧠 Understanding your request...',
-  searching: '🔍 Searching icon libraries...',
-  ranking: '📊 Finding the best matches...',
-  complete: '',
-  error: '',
-  idle: '',
-}
+  understanding: "🧠 Understanding your request...",
+  searching: "🔍 Searching icon libraries...",
+  ranking: "📊 Finding the best matches...",
+  complete: "",
+  error: "",
+  idle: "",
+};
 
 export function GeneratorPage() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const {
     query,
     iconStyle,
@@ -51,38 +51,44 @@ export function GeneratorPage() {
     activeFilters,
     failedProviders,
     error,
-  } = useAppSelector((state) => state.search)
+  } = useAppSelector((state) => state.search);
 
-  const [activeView, setActiveView] = useState<'search' | 'history'>('search')
+  const [activeView, setActiveView] = useState<"search" | "history">("search");
 
-  const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || ''
+  const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || "";
 
-  const isSearching = status === 'understanding' || status === 'searching' || status === 'ranking'
+  const isSearching =
+    status === "understanding" ||
+    status === "searching" ||
+    status === "ranking";
 
-  const statusMessage = STATUS_MESSAGES[status] || ''
+  const statusMessage = STATUS_MESSAGES[status] || "";
 
   // Calculate result counts per source for the filter
   const resultCounts = useMemo(() => {
-    const counts: Record<IconSource, number> = {} as Record<IconSource, number>
+    const counts: Record<IconSource, number> = {} as Record<IconSource, number>;
     for (const r of results) {
-      counts[r.source] = (counts[r.source] || 0) + 1
+      counts[r.source] = (counts[r.source] || 0) + 1;
     }
-    return counts
-  }, [results])
+    return counts;
+  }, [results]);
 
   const handleSearch = useCallback(async () => {
     if (!query.trim()) {
-      showToast('Please enter a search term', 'error')
-      return
+      showToast("Please enter a search term", "error");
+      return;
     }
 
     if (!apiKey) {
-      showToast('Please set VITE_OPENROUTER_API_KEY in your .env file', 'error')
-      return
+      showToast(
+        "Please set VITE_OPENROUTER_API_KEY in your .env file",
+        "error",
+      );
+      return;
     }
 
-    dispatch(setError(null))
-    dispatch(setSelectedIcon(null))
+    dispatch(setError(null));
+    dispatch(setSelectedIcon(null));
 
     try {
       await executeSearch(
@@ -90,116 +96,135 @@ export function GeneratorPage() {
         apiKey,
         {
           onStatusChange: (newStatus) => {
-            dispatch(setStatus(newStatus))
+            dispatch(setStatus(newStatus));
           },
           onUnderstanding: (u) => {
-            dispatch(setUnderstanding(u))
+            dispatch(setUnderstanding(u));
           },
           onPartialResults: (partialResults) => {
-            dispatch(setResults(partialResults))
+            dispatch(setResults(partialResults));
           },
           onFailedProviders: (failed) => {
-            dispatch(setFailedProviders(failed))
+            dispatch(setFailedProviders(failed));
           },
           onComplete: (finalResults, failed) => {
-            dispatch(setResults(finalResults))
+            dispatch(setResults(finalResults));
             if (failed.length > 0) {
               showToast(
-                `${failed.join(' & ')} temporarily unavailable. Showing results from other sources.`,
-                'info',
-              )
+                `${failed.join(" & ")} temporarily unavailable. Showing results from other sources.`,
+                "info",
+              );
             } else if (finalResults.length === 0) {
               showToast(
-                'No matching SVG icons found. Try a different description.',
-                'info',
-              )
+                "No matching SVG icons found. Try a different description.",
+                "info",
+              );
             } else {
               showToast(
                 `Found ${finalResults.length} icons from ${new Set(finalResults.map((r) => r.source)).size} source(s)`,
-                'success',
-              )
+                "success",
+              );
             }
           },
           onError: (msg) => {
-            dispatch(setError(msg))
-            showToast(msg, 'error')
+            dispatch(setError(msg));
+            showToast(msg, "error");
           },
         },
         {
           limit: 20,
-          style: iconStyle === 'any' ? undefined : iconStyle,
+          style: iconStyle === "any" ? undefined : iconStyle,
           minSize: Math.min(iconWidth, iconHeight),
         },
-      )
+      );
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Search failed'
-      dispatch(setError(message))
-      showToast(message, 'error')
+      const message = err instanceof Error ? err.message : "Search failed";
+      dispatch(setError(message));
+      showToast(message, "error");
     }
-  }, [query, apiKey, dispatch, iconStyle, iconWidth, iconHeight])
+  }, [query, apiKey, dispatch, iconStyle, iconWidth, iconHeight]);
 
   const handleSelectIcon = useCallback(
     (icon: IconSearchResult) => {
-      dispatch(setSelectedIcon(icon))
+      dispatch(setSelectedIcon(icon));
       // Save to history
-      dispatch(addToSearchHistory({ query, selectedIcon: icon }))
+      dispatch(addToSearchHistory({ query, selectedIcon: icon }));
     },
     [dispatch, query],
-  )
+  );
 
   const handleQueryChange = useCallback(
     (val: string) => {
-      dispatch(setQuery(val))
+      dispatch(setQuery(val));
     },
     [dispatch],
-  )
+  );
 
   return (
     <div className="generator-page">
       {/* Mobile tab toggle */}
       <div className="generator-page__tabs">
         <button
-          className={`generator-page__tab ${activeView === 'search' ? 'generator-page__tab--active' : ''}`}
-          onClick={() => setActiveView('search')}
+          className={`generator-page__tab ${activeView === "search" ? "generator-page__tab--active" : ""}`}
+          onClick={() => setActiveView("search")}
         >
           Search
         </button>
         <button
-          className={`generator-page__tab ${activeView === 'history' ? 'generator-page__tab--active' : ''}`}
-          onClick={() => setActiveView('history')}
+          className={`generator-page__tab ${activeView === "history" ? "generator-page__tab--active" : ""}`}
+          onClick={() => setActiveView("history")}
         >
           History
         </button>
       </div>
 
-      <div className={`generator-page__content ${activeView === 'history' ? 'generator-page__content--history' : ''}`}>
+      <div
+        className={`generator-page__content ${activeView === "history" ? "generator-page__content--history" : ""}`}
+      >
         {/* Left panel: Search input */}
-        <div className={`generator-page__left ${activeView !== 'search' ? 'generator-page__left--hidden' : ''}`}>
+        <div
+          className={`generator-page__left ${activeView !== "search" ? "generator-page__left--hidden" : ""}`}
+        >
           <SearchPanel
             query={query}
             iconStyle={iconStyle}
             iconWidth={iconWidth}
             iconHeight={iconHeight}
             isSearching={isSearching}
+            hasResults={results.length > 0}
             onQueryChange={handleQueryChange}
             onIconStyleChange={(val) => dispatch(setIconStyle(val))}
             onIconWidthChange={(val) => dispatch(setIconWidth(val))}
             onIconHeightChange={(val) => dispatch(setIconHeight(val))}
             onSearch={handleSearch}
+            onClear={() => dispatch(clearSearch())}
             statusMessage={statusMessage}
           />
         </div>
 
         {/* Right panel: Results / Detail */}
-        <div className={`generator-page__right ${activeView !== 'search' ? 'generator-page__right--hidden' : ''}`}>
+        <div
+          className={`generator-page__right ${activeView !== "search" ? "generator-page__right--hidden" : ""}`}
+        >
           {/* Empty State */}
-          {status === 'idle' && !selectedIcon && results.length === 0 && (
+          {status === "idle" && !selectedIcon && results.length === 0 && (
             <div className="generator-page__empty">
               <div className="generator-page__empty-icon">🔍</div>
-              <h3 className="generator-page__empty-title">Your icon search results will appear here</h3>
+              <h3 className="generator-page__empty-title">
+                Your icon search results will appear here
+              </h3>
               <p className="generator-page__empty-text">
-                Describe any icon on the left and AI will find the best matches from top icon libraries.
+                Describe any icon on the left and AI will find the best matches
+                from top icon libraries.
               </p>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {isSearching && !error && (
+            <div className="generator-page__loading mb-4">
+              <div className="generator-page__spinner" />
+              <p className="generator-page__loading-text">{statusMessage}</p>
             </div>
           )}
 
@@ -218,8 +243,11 @@ export function GeneratorPage() {
               <SourceFilter
                 activeFilters={activeFilters}
                 resultCounts={resultCounts}
-                onToggleFilter={(source: IconSource) => dispatch(toggleFilter(source))}
+                onToggleFilter={(source: IconSource) =>
+                  dispatch(toggleFilter(source))
+                }
                 onClearFilters={() => dispatch(clearFilters())}
+                onClearAll={() => dispatch(clearSearch())}
               />
               <SearchResultsGrid
                 results={filteredResults}
@@ -246,8 +274,8 @@ export function GeneratorPage() {
                   <span>
                     {failedProviders.length === 1
                       ? `${failedProviders[0]} is temporarily unavailable.`
-                      : `${failedProviders.join(', ')} are temporarily unavailable.`}
-                    {' '}Showing results from available sources.
+                      : `${failedProviders.join(", ")} are temporarily unavailable.`}{" "}
+                    Showing results from available sources.
                   </span>
                 </div>
               )}
@@ -264,9 +292,13 @@ export function GeneratorPage() {
         </div>
 
         {/* Mobile history view */}
-        <div className={`generator-page__history ${activeView !== 'history' ? 'generator-page__history--hidden' : ''}`}>
+        <div
+          className={`generator-page__history ${activeView !== "history" ? "generator-page__history--hidden" : ""}`}
+        >
           <div className="generator-page__mobile-history">
-            <h2 className="generator-page__mobile-history-title">Search History</h2>
+            <h2 className="generator-page__mobile-history-title">
+              Search History
+            </h2>
             <p className="generator-page__mobile-history-text">
               History is available in the desktop view.
             </p>
@@ -274,5 +306,5 @@ export function GeneratorPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

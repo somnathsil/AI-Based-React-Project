@@ -293,6 +293,12 @@
     animation: status-pulse 1.5s ease infinite;
     flex-shrink: 0;
   }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 @keyframes panel-enter {

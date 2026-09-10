@@ -7,6 +7,7 @@ interface SourceFilterProps {
   resultCounts: Record<IconSource, number>
   onToggleFilter: (source: IconSource) => void
   onClearFilters: () => void
+  onClearAll?: () => void
 }
 
 export function SourceFilter({
@@ -14,6 +15,7 @@ export function SourceFilter({
   resultCounts,
   onToggleFilter,
   onClearFilters,
+  onClearAll,
 }: SourceFilterProps) {
   const providers = getEnabledProviderMetas()
 
@@ -32,14 +34,12 @@ export function SourceFilter({
             <span className="source-filter__count">{totalResults}</span>
           )}
         </span>
-        {hasActiveFilters && (
-          <button
-            className="source-filter__clear"
-            onClick={onClearFilters}
-          >
-            Clear filters
-          </button>
-        )}
+        <button
+          className="source-filter__clear"
+          onClick={onClearAll ?? onClearFilters}
+        >
+          Clear
+        </button>
       </div>
       <div className="source-filter__chips">
         {providers.map((provider) => {
@@ -60,6 +60,7 @@ export function SourceFilter({
             </button>
           )
         })}
+
       </div>
     </div>
   )

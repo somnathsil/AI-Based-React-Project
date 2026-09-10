@@ -128,8 +128,6 @@ export async function generateSvgIcon(
     abortController = new AbortController();
 
     try {
-      const model =
-        import.meta.env.VITE_OPENROUTER_API_MODEL || "openai/gpt-4o-mini";
       const response = await fetch("/api/openrouter/v1/chat/completions", {
         method: "POST",
         headers: {

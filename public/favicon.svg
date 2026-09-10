@@ -1,1 +1,11 @@
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='currentColor' d='M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2zm-1 2h12v2H6v-2z'/><path fill='currentColor' d='M10 9l2-2 2 2-2 2-2-2zm0 4l2-2 2 2-2 2-2-2z'/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="#020617"/>
+  <text x="16" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="url(#brandGradient)" text-anchor="middle">PC</text>
+</svg>
