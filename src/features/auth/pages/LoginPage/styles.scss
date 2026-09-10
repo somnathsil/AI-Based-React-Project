@@ -1,10 +1,47 @@
 .login-page {
   min-height: 100vh;
-  background: #020617;
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
+  background:
+    radial-gradient(1100px 480px at 50% -120px, rgba(99, 102, 241, 0.08), transparent 70%),
+    radial-gradient(900px 520px at 100% 0%, rgba(168, 85, 247, 0.05), transparent 70%),
+    radial-gradient(1000px 600px at 0% 100%, rgba(56, 189, 248, 0.02), transparent 70%),
+    linear-gradient(180deg, #020617 0%, #060a1a 45%, #080e20 100%);
+
+  // Ambient glow orbs — subtle, viewport-fixed
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(560px circle at 12% 18%, rgba(99, 102, 241, 0.06), transparent 65%),
+      radial-gradient(600px circle at 88% 10%, rgba(217, 70, 239, 0.04), transparent 65%),
+      radial-gradient(700px circle at 50% 105%, rgba(99, 102, 241, 0.07), transparent 68%),
+      radial-gradient(560px circle at 8% 88%, rgba(56, 189, 248, 0.02), transparent 65%),
+      radial-gradient(560px circle at 92% 82%, rgba(139, 92, 246, 0.03), transparent 65%);
+    animation: login-aurora 26s ease-in-out infinite alternate;
+  }
+
+  // Faint grid overlay — very subtle
+  &::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, #000 35%, transparent 100%);
+  }
 
   &__card {
     width: 100%;
@@ -16,6 +53,9 @@
     backdrop-filter: blur(20px);
     overflow: hidden;
     animation: login-enter 0.5s ease;
+    box-shadow:
+      0 24px 80px rgba(2, 6, 23, 0.6),
+      0 0 60px rgba(99, 102, 241, 0.04);
 
     @media (max-width: 575.98px) {
       padding: 28px 24px;
@@ -223,6 +263,26 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes login-aurora {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -1.5%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-2%, 1.5%, 0) scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-page {
+    &::before {
+      animation: none;
+    }
   }
 }
 

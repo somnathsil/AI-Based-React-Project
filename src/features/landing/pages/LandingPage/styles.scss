@@ -1,7 +1,45 @@
 .landing {
   min-height: 100vh;
-  background: #020617;
+  position: relative;
+  isolation: isolate;
   color: #e2e8f0;
+  background:
+    radial-gradient(1100px 480px at 50% -120px, rgba(99, 102, 241, 0.11), transparent 70%),
+    radial-gradient(900px 520px at 100% 0%, rgba(168, 85, 247, 0.07), transparent 70%),
+    radial-gradient(1000px 600px at 0% 100%, rgba(56, 189, 248, 0.05), transparent 70%),
+    linear-gradient(180deg, #020617 0%, #070b1d 45%, #090f24 100%);
+
+  // Ambient glow orbs — moderate, viewport-fixed so the effect covers
+  // every screenful from top to bottom, with no dead zone at the end
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(560px circle at 12% 18%, rgba(99, 102, 241, 0.09), transparent 65%),
+      radial-gradient(600px circle at 88% 10%, rgba(217, 70, 239, 0.06), transparent 65%),
+      radial-gradient(700px circle at 50% 105%, rgba(99, 102, 241, 0.1), transparent 68%),
+      radial-gradient(560px circle at 8% 88%, rgba(56, 189, 248, 0.06), transparent 65%),
+      radial-gradient(560px circle at 92% 82%, rgba(139, 92, 246, 0.07), transparent 65%);
+    animation: landing-aurora 26s ease-in-out infinite alternate;
+  }
+
+  // Faint grid overlay covering the viewport, gently fading at the edges
+  &::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, #000 35%, transparent 100%);
+  }
 
   &__main {
     max-width: 1200px;
@@ -27,9 +65,12 @@
     font-weight: 500;
     padding: 6px 16px;
     border-radius: 100px;
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    color: #818cf8;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+    border: 1px solid rgba(129, 140, 248, 0.25);
+    color: #a5b4fc;
+    box-shadow:
+      0 0 16px rgba(99, 102, 241, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
     margin-bottom: 28px;
     letter-spacing: 0.3px;
   }
@@ -55,17 +96,18 @@
   }
 
   &__hero-title-gradient {
-    background: linear-gradient(135deg, #60a5fa, #818cf8, #c084fc);
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 45%, #e879f9 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 0 14px rgba(129, 140, 248, 0.2));
   }
 
   &__hero-description {
     font-family: "Poppins", sans-serif;
     font-size: 18px;
     line-height: 1.7;
-    color: #94a3b8;
+    color: #a3b2cc;
     max-width: 600px;
     margin: 0 auto 36px;
 
@@ -76,6 +118,7 @@
 
   &__hero-cta {
     margin-bottom: 60px;
+    filter: drop-shadow(0 10px 24px rgba(99, 102, 241, 0.2));
   }
 
   // Features
@@ -97,5 +140,25 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes landing-aurora {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -1.5%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-2%, 1.5%, 0) scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing {
+    &::before {
+      animation: none;
+    }
   }
 }
