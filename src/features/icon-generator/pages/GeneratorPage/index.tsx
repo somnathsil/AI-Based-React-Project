@@ -38,16 +38,9 @@ export function GeneratorPage() {
 
   const [activeView, setActiveView] = useState<'generator' | 'history'>('generator')
 
-  const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY || ''
-
   const handleGenerate = async () => {
     if (!prompt.trim()) {
       showToast('Please enter a description for your icon', 'error')
-      return
-    }
-
-    if (!apiKey) {
-      showToast('Please set VITE_OPENROUTER_API_KEY in your .env file', 'error')
       return
     }
 
@@ -63,7 +56,7 @@ export function GeneratorPage() {
         cornerStyle,
       }
 
-      const result = await generateSvgIcon(params, apiKey)
+      const result = await generateSvgIcon(params)
       dispatch(setCurrentIcon(result))
       dispatch(addToHistory(result))
       showToast('SVG generated successfully!', 'success')

@@ -15,6 +15,7 @@
     "react-dom": "^19.2.8",
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.2",
+    "replicate": "^1.4.0",
     "sass": "^1.77.8",
     "zod": "^4.4.3"
   },

@@ -47,6 +47,10 @@ Create a `.env` file in the project root. You will need an [OpenRouter](https://
 VITE_OPENROUTER_API_KEY=your_key_here
 ```
 
+You can configure multiple credentials or models with numbered variables such as
+`VITE_OPENROUTER_API_KEY_1` and `VITE_REPLICATE_API_TOKEN_1`. Configured entries
+are tried one by one; comma-separated values are supported too.
+
 ### Development
 
 ```bash
