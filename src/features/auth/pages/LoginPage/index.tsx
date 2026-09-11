@@ -85,7 +85,7 @@ export function LoginPage() {
           <Input
             label="Email"
             type="email"
-            placeholder="Enter your emaili"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             error={errors.email}

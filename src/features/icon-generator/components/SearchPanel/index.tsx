@@ -228,11 +228,11 @@ export function SearchPanel({
 
         {/* Status message */}
         {/* {statusMessage && (
-          <div className="search-panel__status">
-            <div className="search-panel__status-dot" />
-            <span>{statusMessage}</span>
-          </div>
-        )} */}
+            <div className="search-panel__status">
+              <div className="search-panel__status-dot" />
+              <span>{statusMessage}</span>
+            </div>
+          )} */}
 
         {/* Action Buttons */}
         <div className="search-panel__actions">
