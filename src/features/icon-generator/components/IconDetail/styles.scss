@@ -184,6 +184,31 @@
     flex-wrap: wrap;
     gap: 10px;
   }
+
+  &__loading,
+  &__error,
+  &__note {
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  &__loading {
+    color: #94a3b8;
+    background: rgba(51, 65, 85, 0.25);
+  }
+
+  &__note {
+    color: #93c5fd;
+    background: rgba(30, 58, 138, 0.35);
+  }
+
+  &__error {
+    color: #fca5a5;
+    background: rgba(127, 29, 29, 0.25);
+  }
 }
 
 @keyframes detail-enter {

@@ -20,37 +20,50 @@ export interface SearchCallbacks {
 }
 
 /**
- * Per-provider cap: each provider can contribute at most this many results.
- * This prevents any single provider from dominating the output.
+ * Per-provider cap for standard libraries (Iconify / Lucide / Remix).
  */
-const PER_PROVIDER_CAP = 8
+const PER_PROVIDER_CAP = 15
 
 /**
- * Max results from generation-only providers (Magnific AI).
+ * Magnific catalog can return hundreds of matches for one query.
+ * Keep a high ceiling so users see as many Magnific icons as practical.
+ */
+const MAGNIFIC_PROVIDER_CAP = 100
+
+/**
+ * Max results from generation-only providers.
  */
 const GENERATION_PROVIDER_CAP = 3
 
+function providerResultCap(source: IconSource): number {
+  return source === 'magnific' ? MAGNIFIC_PROVIDER_CAP : PER_PROVIDER_CAP
+}
+
 /**
- * Deduplicate results by comparing SVG content similarity.
- * Keep the first occurrence (from the higher-priority provider).
+ * Deduplicate results by unique id first, then by SVG content.
+ * Never fingerprint by display name — Magnific has many icons named "Plus",
+ * and name-based dedupe was collapsing them to a single result.
  */
 function deduplicateResults(results: IconSearchResult[]): IconSearchResult[] {
-  const seen = new Set<string>()
+  const seenIds = new Set<string>()
+  const seenSvg = new Set<string>()
   const unique: IconSearchResult[] = []
 
   for (const result of results) {
-    // Create a fingerprint from SVG content (stripped of whitespace)
-    const svgFingerprint = result.svg
-      ? result.svg
-          .replace(/\s+/g, ' ')
-          .replace(/>\s+</g, '><')
-          .toLowerCase()
-      : `${result.source}:${result.name}`
+    if (seenIds.has(result.id)) continue
+    seenIds.add(result.id)
 
-    if (!seen.has(svgFingerprint)) {
-      seen.add(svgFingerprint)
-      unique.push(result)
+    if (result.svg) {
+      const svgFingerprint = result.svg
+        .replace(/\s+/g, ' ')
+        .replace(/>\s+</g, '><')
+        .toLowerCase()
+
+      if (seenSvg.has(svgFingerprint)) continue
+      seenSvg.add(svgFingerprint)
     }
+
+    unique.push(result)
   }
 
   return unique
@@ -178,23 +191,37 @@ export async function executeSearch(
   const resultsByProvider = new Map<IconSource, IconSearchResult[]>()
   const failedProviders: IconSource[] = []
 
-  // Search each provider with ALL search terms, cap per provider
+  // Search each provider with search terms, cap per provider
   const providerSearchPromises = searchProviders.map(async (provider) => {
     const providerResults: IconSearchResult[] = []
     let consecutiveErrors = 0
 
-    for (const term of understanding.searchTerms) {
+    // Magnific is rate-limited on SVG downloads. Searching every AI synonym
+    // (plus, add, addition, ...) caused most downloads to fail and left only
+    // one "Plus" after name-based dedupe. Prefer the user's original query.
+    const termsForProvider =
+      provider.meta.id === 'magnific'
+        ? [
+            understanding.originalQuery.trim().toLowerCase() ||
+              understanding.searchTerms[0],
+          ].filter(Boolean)
+        : understanding.searchTerms
+
+    for (const term of termsForProvider) {
       try {
+        const cap = providerResultCap(provider.meta.id)
         const results = await provider.search(term, {
-          // Each provider gets a higher limit internally for dedup, but we cap later
-          limit: PER_PROVIDER_CAP + 5,
-          timeoutMs: options?.timeoutMs ?? 8000,
+          limit: cap,
+          timeoutMs:
+            provider.meta.id === 'magnific'
+              ? (options?.timeoutMs ?? 60000)
+              : (options?.timeoutMs ?? 25000),
         })
         providerResults.push(...results)
         consecutiveErrors = 0 // Reset on success
 
         // Stop early if this provider already has enough candidates
-        if (providerResults.length >= PER_PROVIDER_CAP + 5) break
+        if (providerResults.length >= cap) break
       } catch (error: unknown) {
         consecutiveErrors++
         console.warn(
@@ -217,9 +244,10 @@ export async function executeSearch(
     const unique = deduplicateResults(providerResults)
 
     // Apply per-provider cap (sort by relevance first)
+    const cap = providerResultCap(provider.meta.id)
     const capped = unique
       .sort((a, b) => (b.relevanceScore ?? 0.5) - (a.relevanceScore ?? 0.5))
-      .slice(0, PER_PROVIDER_CAP)
+      .slice(0, cap)
 
     if (capped.length > 0) {
       resultsByProvider.set(provider.meta.id, capped)
@@ -242,7 +270,8 @@ export async function executeSearch(
     try {
       const results = await provider.search(query, {
         limit: GENERATION_PROVIDER_CAP,
-        timeoutMs: 15000,
+        // Magnific text-to-icon is async (create task + poll)
+        timeoutMs: 90000,
       })
 
       const capped = results.slice(0, GENERATION_PROVIDER_CAP)
@@ -305,5 +334,11 @@ function buildInterleavedResults(
 
   const byProvider = new Map<IconSource, IconSearchResult[]>(sortedEntries)
 
-  return interleaveResults(byProvider, PER_PROVIDER_CAP * sortedEntries.length + GENERATION_PROVIDER_CAP)
+  // Include every icon each provider returned (do not cut Magnific back down)
+  const maxTotal = Array.from(byProvider.values()).reduce(
+    (sum, items) => sum + items.length,
+    0,
+  )
+
+  return interleaveResults(byProvider, Math.max(maxTotal, 1))
 }

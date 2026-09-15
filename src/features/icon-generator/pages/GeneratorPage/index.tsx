@@ -153,6 +153,13 @@ export function GeneratorPage() {
     [dispatch, query],
   );
 
+  const handleIconUpdate = useCallback(
+    (icon: IconSearchResult) => {
+      dispatch(setSelectedIcon(icon));
+    },
+    [dispatch],
+  );
+
   const handleQueryChange = useCallback(
     (val: string) => {
       dispatch(setQuery(val));
@@ -287,6 +294,7 @@ export function GeneratorPage() {
             <IconDetail
               icon={selectedIcon}
               onClear={() => dispatch(setSelectedIcon(null))}
+              onIconUpdate={handleIconUpdate}
             />
           )}
         </div>

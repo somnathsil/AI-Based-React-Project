@@ -40,7 +40,7 @@ export function getProvider(source: IconSource): IconSearchProvider | undefined 
   return providerList.find((p) => p.meta.id === source)
 }
 
-/** Get enabled providers for search (excludes generation-only providers like Magnific for search). */
+/** Get enabled providers for search (catalog/search-capable providers). */
 export function getSearchProviders(): IconSearchProvider[] {
   return providerList.filter((p) => p.meta.enabled && p.meta.supportsSearch)
 }

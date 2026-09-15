@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import type { IconSearchResult } from '@/services/icon-search/types'
+import { fetchMagnificIconSvg } from '@/services/icon-search/providers/magnific'
 import { SvgPreview } from '@/components/svg/SvgPreview'
 import { SvgCodeViewer } from '@/components/svg/SvgCodeViewer'
 import { SvgActions } from '@/components/svg/SvgActions'
@@ -8,9 +10,85 @@ import './styles.scss'
 interface IconDetailProps {
   icon: IconSearchResult
   onClear: () => void
+  /** Called when SVG is loaded lazily (e.g. Magnific thumbnail → full SVG). */
+  onIconUpdate?: (icon: IconSearchResult) => void
 }
 
-export function IconDetail({ icon, onClear }: IconDetailProps) {
+function parseMagnificId(iconId: string): number | null {
+  const match = /^magnific:(\d+)$/.exec(iconId)
+  if (!match) return null
+  const n = Number(match[1])
+  return Number.isFinite(n) ? n : null
+}
+
+export function IconDetail({ icon, onClear, onIconUpdate }: IconDetailProps) {
+  const [resolvedSvg, setResolvedSvg] = useState<string | undefined>(icon.svg)
+  const [loadingSvg, setLoadingSvg] = useState(false)
+  const [svgError, setSvgError] = useState<string | null>(null)
+  const [svgNote, setSvgNote] = useState<string | null>(null)
+
+  useEffect(() => {
+    setResolvedSvg(icon.svg)
+    setSvgError(null)
+    setSvgNote(null)
+
+    if (icon.svg) {
+      setLoadingSvg(false)
+      return
+    }
+
+    if (icon.source !== 'magnific') {
+      setLoadingSvg(false)
+      return
+    }
+
+    const magnificId = parseMagnificId(icon.id)
+    if (magnificId == null) {
+      setSvgError('Could not load SVG for this icon.')
+      return
+    }
+
+    let cancelled = false
+    setLoadingSvg(true)
+
+    fetchMagnificIconSvg(magnificId, {
+      name: icon.name,
+      previewUrl: icon.previewUrl,
+      style: icon.style,
+    })
+      .then((result) => {
+        if (cancelled) return
+        if (!result.svg) {
+          setSvgError(
+            result.error ||
+              'SVG download failed. Add Magnific credits or check OpenRouter key.',
+          )
+          setLoadingSvg(false)
+          return
+        }
+        setResolvedSvg(result.svg)
+        setLoadingSvg(false)
+        if (result.source === 'fallback') {
+          setSvgNote(
+            'Magnific credits unavailable — SVG recreated from icon preview for copy/download.',
+          )
+        }
+        onIconUpdate?.({ ...icon, svg: result.svg })
+      })
+      .catch(() => {
+        if (cancelled) return
+        setSvgError('SVG download failed. Try another icon.')
+        setLoadingSvg(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [icon.id, icon.svg, icon.source])
+
+  const svg = resolvedSvg
+
   return (
     <div className="icon-detail">
       <div className="icon-detail__header">
@@ -33,10 +111,9 @@ export function IconDetail({ icon, onClear }: IconDetailProps) {
       </div>
 
       <div className="icon-detail__body">
-        {/* Large preview */}
         <div className="icon-detail__preview-container">
-          {icon.svg ? (
-            <SvgPreview svg={icon.svg} title={icon.name} size="xl" />
+          {svg ? (
+            <SvgPreview svg={svg} title={icon.name} size="xl" />
           ) : icon.previewUrl ? (
             <div className="icon-detail__preview-image">
               <img src={icon.previewUrl} alt={icon.name} />
@@ -44,7 +121,6 @@ export function IconDetail({ icon, onClear }: IconDetailProps) {
           ) : null}
         </div>
 
-        {/* Icon info */}
         <div className="icon-detail__info">
           <h3 className="icon-detail__info-name">{icon.name}</h3>
           <div className="icon-detail__info-meta">
@@ -55,7 +131,6 @@ export function IconDetail({ icon, onClear }: IconDetailProps) {
           </div>
         </div>
 
-        {/* Source link */}
         {icon.sourceUrl && (
           <a
             className="icon-detail__source-link"
@@ -81,7 +156,6 @@ export function IconDetail({ icon, onClear }: IconDetailProps) {
           </a>
         )}
 
-        {/* License info */}
         {(icon.license || icon.attributionRequired) && (
           <div className="icon-detail__license">
             {icon.license && (
@@ -123,23 +197,31 @@ export function IconDetail({ icon, onClear }: IconDetailProps) {
           </div>
         )}
 
-        {/* SVG Code */}
-        {icon.svg && <SvgCodeViewer svg={icon.svg} />}
+        {loadingSvg && (
+          <div className="icon-detail__loading" role="status">
+            Loading SVG for copy &amp; download…
+          </div>
+        )}
 
-        {/* Actions */}
+        {svgNote && !loadingSvg && (
+          <div className="icon-detail__note" role="status">
+            {svgNote}
+          </div>
+        )}
+
+        {svgError && !loadingSvg && (
+          <div className="icon-detail__error" role="alert">
+            {svgError}
+          </div>
+        )}
+
+        {svg && <SvgCodeViewer svg={svg} />}
+
         <div className="icon-detail__actions">
-          {icon.svg && (
-            <SvgActions svg={icon.svg} prompt={icon.name} />
-          )}
+          {svg && <SvgActions svg={svg} prompt={icon.name} />}
         </div>
 
-        {/* Back button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onClear}
-          fullWidth
-        >
+        <Button variant="ghost" size="sm" onClick={onClear} fullWidth>
           ← Back to results
         </Button>
       </div>
