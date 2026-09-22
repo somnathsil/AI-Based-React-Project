@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useAppSelector } from "@/hooks/useAppSelector";
 import { logout } from "@/store/authSlice";
@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState<"search" | "history">("search");
@@ -30,6 +31,59 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <Link to="/" className="dashboard-header__brand">
               <span className="dashboard-header__pixel">Pixel</span>
               <span className="dashboard-header__coders">Coders</span>
+            </Link>
+          </div>
+
+          {/* Centered nav — Favicon + SVG Generator side by side */}
+          <nav className="dashboard-header__nav">
+            {/* SVG Generator entry — points to the icon generator dashboard */}
+            <Link
+              to="/dashboard"
+              className={`dashboard-header__nav-btn ${
+                location.pathname === "/dashboard"
+                  ? "dashboard-header__nav-btn--active"
+                  : ""
+              }`}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+              SVG Generator
+            </Link>
+
+            {/* Favicon Generator entry — smallest possible additive nav item */}
+            <Link
+              to="/favicon-generator"
+              className={`dashboard-header__nav-btn ${
+                location.pathname === "/favicon-generator"
+                  ? "dashboard-header__nav-btn--active"
+                  : ""
+              }`}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <rect x="9" y="9" width="6" height="6" />
+              </svg>
+              Favicon
             </Link>
 
             {/* <nav className="dashboard-header__nav">
@@ -63,7 +117,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 History
               </button>
             </nav> */}
-          </div>
+          </nav>
 
           <div className="dashboard-header__right">
             <div className="dashboard-header__user">

@@ -1,0 +1,119 @@
+// PixelCoders — Favicon Generator page (isolated feature styles)
+// Reuses existing design tokens: Poppins, dark #020617 base,
+// indigo/violet gradient accents — mirrors GeneratorPage/Dashboard styles.
+
+.fg-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+
+  @media (max-width: 767.98px) {
+    padding: 24px 16px 48px;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #64748b;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #818cf8;
+    }
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  &__back {
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-family: "Poppins", sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 8px;
+
+    span {
+      background: linear-gradient(135deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @media (max-width: 767.98px) {
+      font-size: 26px;
+    }
+  }
+
+  &__subtitle {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.6;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+
+    @media (max-width: 767.98px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.fg-card {
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(51, 65, 85, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  animation: fg-fade-in 0.4s ease;
+
+  &__title {
+    font-family: "Poppins", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0 0 6px;
+  }
+
+  &__subtitle {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    color: #64748b;
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+
+  &__hint {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    color: #64748b;
+    margin: 12px 0 0;
+    text-align: center;
+  }
+}
+
+@keyframes fg-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

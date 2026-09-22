@@ -137,7 +137,9 @@ export async function generateSvgIcon(
           "X-Title": "PixelCoders - AI SVG Icon Generator",
         },
         body: JSON.stringify({
-          model: "openai/gpt-4o-mini",
+          model:
+            (import.meta.env.VITE_OPENROUTER_API_MODEL as string | undefined)?.trim() ||
+            "openai/gpt-4o-mini",
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: userPrompt },

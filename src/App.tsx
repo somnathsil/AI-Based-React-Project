@@ -7,6 +7,7 @@ import { LandingPage } from '@/features/landing/pages/LandingPage'
 import { DemoPage } from '@/features/landing/pages/DemoPage'
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { DashboardPage } from '@/features/icon-generator/pages/DashboardPage'
+import { FaviconGeneratorPage } from '@/features/favicon-generator/pages/FaviconGeneratorPage'
 
 export default function App() {
   return (
@@ -28,6 +29,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/favicon-generator"
+            element={
+              <ProtectedRoute>
+                <FaviconGeneratorPage />
               </ProtectedRoute>
             }
           />

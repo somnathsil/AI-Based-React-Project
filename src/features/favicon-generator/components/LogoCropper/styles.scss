@@ -1,0 +1,230 @@
+// PixelCoders — Favicon Generator: crop modal (isolated feature styles)
+
+.fg-crop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(8px);
+  }
+
+  &__panel {
+    position: relative;
+    width: min(680px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow: auto;
+    background: #0b1120;
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    border-radius: 16px;
+    padding: 20px 24px 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  &__title {
+    font-family: "Poppins", sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0 0 4px;
+  }
+
+  &__subtitle {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    color: #94a3b8;
+    margin: 0;
+  }
+
+  &__close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.2s;
+
+    &:hover {
+      color: #e2e8f0;
+      background: rgba(51, 65, 85, 0.3);
+    }
+  }
+
+  &__stage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__frame {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    line-height: 0;
+    border-radius: 10px;
+    touch-action: none;
+    user-select: none;
+
+    // Transparency checkerboard (same treatment as the uploader thumb)
+    background-image:
+      linear-gradient(45deg, #1e293b 25%, transparent 25%),
+      linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #1e293b 75%),
+      linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+    background-size: 12px 12px;
+    background-position:
+      0 0,
+      0 6px,
+      6px -6px,
+      -6px 0;
+  }
+
+  &__img {
+    display: block;
+    max-width: 100%;
+    max-height: 56vh;
+    border-radius: 10px;
+  }
+
+  &__box {
+    position: absolute;
+    cursor: move;
+    border: 2px solid #818cf8;
+    border-radius: 4px;
+    // Dim everything outside the selection
+    box-shadow: 0 0 0 9999px rgba(2, 6, 23, 0.72);
+    touch-action: none;
+
+    // Rule-of-thirds guides
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+    &::before {
+      left: 33.333%;
+      right: 33.333%;
+      top: 0;
+      bottom: 0;
+      border-left: 1px solid rgba(129, 140, 248, 0.35);
+      border-right: 1px solid rgba(129, 140, 248, 0.35);
+    }
+    &::after {
+      top: 33.333%;
+      bottom: 33.333%;
+      left: 0;
+      right: 0;
+      border-top: 1px solid rgba(129, 140, 248, 0.35);
+      border-bottom: 1px solid rgba(129, 140, 248, 0.35);
+    }
+  }
+
+  &__dim {
+    position: absolute;
+    left: 0;
+    top: -30px;
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #c7d2fe;
+    background: rgba(2, 6, 23, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 6px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  &__handle {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #818cf8;
+    border: 2px solid #e0e7ff;
+    border-radius: 50%;
+    touch-action: none;
+
+    &--nw {
+      left: -8px;
+      top: -8px;
+      cursor: nwse-resize;
+    }
+    &--ne {
+      right: -8px;
+      top: -8px;
+      cursor: nesw-resize;
+    }
+    &--sw {
+      left: -8px;
+      bottom: -8px;
+      cursor: nesw-resize;
+    }
+    &--se {
+      right: -8px;
+      bottom: -8px;
+      cursor: nwse-resize;
+    }
+  }
+
+  &__foot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  &__hint {
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    color: #64748b;
+    margin-right: auto;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  @media (max-width: 575.98px) {
+    padding: 12px;
+
+    &__panel {
+      padding: 16px;
+    }
+
+    &__actions {
+      width: 100%;
+
+      button {
+        flex: 1;
+      }
+    }
+
+    &__hint {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+}
