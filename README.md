@@ -41,11 +41,19 @@ npm install
 
 ### Environment Variables
 
-Create a `.env` file in the project root. You will need an [OpenRouter](https://openrouter.ai) API key:
+Create a `.env` file in the project root (see `.env.example`):
 
 ```
-VITE_OPENROUTER_API_KEY=your_key_here
+# OpenRouter — AI query understanding + dashboard generator
+VITE_OPENROUTER_API_KEY=your_openrouter_key
+
+# Magnific AI paid account — icon generation (API key from org settings)
+# https://www.magnific.com/user/organization/api-keys
+MAGNIFIC_API_KEY=your_magnific_api_key
+VITE_MAGNIFIC_ENABLED=true
 ```
+
+`MAGNIFIC_API_KEY` is server-side only. The Vite proxy injects it as `x-magnific-api-key` for `/api/magnific` requests.
 
 ### Development
 
